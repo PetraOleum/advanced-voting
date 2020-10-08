@@ -78,31 +78,31 @@ advplot <- ggplot(vtypes, aes(x = Year, y = Votes, fill = Type)) + geom_area() +
 advplot
 
 propplot <- ggplot(filter(partylev, Party %in% names(partycolours)),
-       aes(x = Year, y = Advance_Proportion, colour = Party)) + geom_line() +
+       aes(x = Year, y = Advance_Proportion, colour = Party)) + geom_line() + geom_point() +
     scale_colour_manual(values = partycolours) +
     scale_y_continuous("Percent of votes from Advance votes",
                        labels = scales::percent, limits=c(0, NA), expand=c(0,0)) +
     scale_x_continuous("General Election Year",
-                       breaks = e.years,
-                       expand = c(0,0)) +
+                       breaks = e.years) +
     labs(title = "Share of Each Party's Votes From Advanced Votes by Year")
 propplot
 
 
-ggplot(filter(partylev, Party %in% names(partycolours)),
+scplot <- ggplot(filter(partylev, Party %in% names(partycolours)),
        aes(x = Year, y = Seat_Difference, colour = Party)) +
-    geom_line() +
+    geom_line() + geom_point() + 
     scale_colour_manual(values = partycolours) +
     scale_x_continuous("General Election Year",
-                       breaks = e.years, expand = c(0,0)) +
-    labs(title = )
+                       breaks = e.years) +
+    scale_y_continuous("Seat change from advance results and final results", n.breaks = 8,
+                       labels = function(x) { paste0(ifelse(x > 0, "+", ""), x) }) +
+    labs(title = "Seat Change Between Advance Vote Results and Final Results")
+scplot
 
-svp <- partylev %>% mutate(PV_Prop_Difference = PV_Prop_Total - PV_Prop_Advance) %>%
-    select(Year, Party, Seat_Difference, PV_Prop_Difference) %>%
-    filter(Party %in% names(partycolours))
-
-ggplot(svp, aes(PV_Prop_Difference, Seat_Difference, colour = Party)) + geom_point() +
+pvplot <- ggplot(filter(partylev, Party %in% names(partycolours)),
+       aes(x = Year, y = PV_Prop_Total, colour = Party)) +
+    geom_line() + geom_point() +
     scale_colour_manual(values = partycolours) +
-    scale_x_continuous("Party Vote Proportion Difference", labels = scales::percent) +
-    labs(title = "Relationship between vote difference and seat difference",
-         y = "Seat Difference")
+    scale_y_continuous("Party vote proportion", n.breaks = 10,
+                       expand=c(0,0), limits = c(0, 0.5), labels = scales::percent)
+pvplot
