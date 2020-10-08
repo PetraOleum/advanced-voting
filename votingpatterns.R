@@ -107,3 +107,19 @@ pvplot <- ggplot(filter(partylev, Party %in% names(partycolours)),
                        expand=c(0,0), limits = c(0, 0.5), labels = scales::percent) +
     labs(title = "Party vote trajectories")
 pvplot
+
+daily <- read.csv("2020-advance-vote-data.csv", stringsAsFactors = FALSE) %>%
+    filter(Date != "Totals") %>% mutate(Date = as.Date(Date)) %>%
+    pivot_longer(cols = X2020.General.Election:X2014.General.Election, names_to = "Year", names_pattern = "^X([0-9]{4}).*$", values_to = "Votes") %>%
+    mutate(Votes = ifelse(is.na(Votes), 0, Votes))
+
+dailyplot <- ggplot(daily, aes(x = Date, y = Votes, fill = Year)) +
+    geom_col(position="dodge") +
+    scale_x_date("2020 election-equivalent date",
+                 date_breaks = "1 day", date_labels = "%a %b %e",
+                 expand = c(0,0)) +
+    scale_fill_brewer("Election year", palette = "Set2") +
+    scale_y_continuous("Advance votes", labels = scales::comma, expand = c(0,0)) +
+    labs(title = "Daily Advance Votes", subtitle = "Last updated 8 October 2020") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+dailyplot
