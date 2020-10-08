@@ -104,5 +104,6 @@ pvplot <- ggplot(filter(partylev, Party %in% names(partycolours)),
     geom_line() + geom_point() +
     scale_colour_manual(values = partycolours) +
     scale_y_continuous("Party vote proportion", n.breaks = 10,
-                       expand=c(0,0), limits = c(0, 0.5), labels = scales::percent)
+                       expand=c(0,0), limits = c(0, 0.5), labels = scales::percent) +
+    labs(title = "Party vote trajectories")
 pvplot
