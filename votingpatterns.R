@@ -103,6 +103,8 @@ pvplot <- ggplot(filter(partylev, Party %in% names(partycolours)),
        aes(x = Year, y = PV_Prop_Total, colour = Party)) +
     geom_line() + geom_point() +
     scale_colour_manual(values = partycolours) +
+    scale_x_continuous("General Election Year",
+                       breaks = e.years) +
     scale_y_continuous("Party vote proportion", n.breaks = 10,
                        expand=c(0,0), limits = c(0, 0.5), labels = scales::percent) +
     labs(title = "Party vote trajectories")
